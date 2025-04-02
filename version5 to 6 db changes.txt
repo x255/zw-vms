@@ -1,0 +1,58 @@
+ALTER TABLE `login_roles` ADD `lr_vech_del` INT(11) NOT NULL DEFAULT '0' AFTER `lr_settings`, ADD `lr_driver_del` INT(11) NOT NULL DEFAULT '0' AFTER `lr_vech_del`, ADD `lr_booking_del` INT(11) NOT NULL DEFAULT '0' AFTER `lr_driver_del`, ADD `lr_cust_del` INT(11) NOT NULL DEFAULT '0' AFTER `lr_booking_del`, ADD `lr_fuel_del` INT(11) NOT NULL DEFAULT '0' AFTER `lr_cust_del`, ADD `lr_reminder_del` INT(11) NOT NULL DEFAULT '0' AFTER `lr_fuel_del`, ADD `lr_ie_del` INT(11) NOT NULL DEFAULT '0' AFTER `lr_reminder_del`;
+ALTER TABLE `vehicles` ADD `v_traccar_id` VARCHAR(100) NULL AFTER `v_api_password`;
+ALTER TABLE `settings` ADD `s_traccar_enabled` INT(11) NOT NULL DEFAULT '0' AFTER `s_googel_api_key`;
+ALTER TABLE `vehicles` ADD `v_file` VARCHAR(256) NULL AFTER `v_traccar_id`, ADD `v_file1` VARCHAR(256) NULL AFTER `v_file`;
+ALTER TABLE `drivers` ADD `d_file` VARCHAR(256) NULL AFTER `d_is_active`, ADD `d_file1` VARCHAR(256) NULL AFTER `d_file`;
+ALTER TABLE `settings` ADD `s_date_format` VARCHAR(100) NOT NULL AFTER `s_traccar_enabled`;
+ALTER TABLE `drivers` CHANGE `d_license_expdate` `d_license_expdate` VARCHAR(100) NOT NULL;
+ALTER TABLE `drivers` CHANGE `d_doj` `d_doj` VARCHAR(100) NOT NULL;
+ALTER TABLE `trips` CHANGE `t_start_date` `t_start_date` VARCHAR(100) NOT NULL, CHANGE `t_end_date` `t_end_date` VARCHAR(100) NOT NULL;
+ALTER TABLE `fuel` CHANGE `v_fuelfilldate` `v_fuelfilldate` VARCHAR(100) NOT NULL;
+ALTER TABLE `incomeexpense` CHANGE `ie_date` `ie_date` VARCHAR(100) NOT NULL;
+ALTER TABLE `settings` ADD `s_traccar_url` VARCHAR(256) NULL AFTER `s_traccar_enabled`, ADD `s_traccar_username` VARCHAR(256) NULL AFTER `s_traccar_url`, ADD `s_traccar_password` VARCHAR(256) NULL AFTER `s_traccar_username`;
+CREATE TABLE `vehicle_maintenance` (
+  `m_id` int(11) NOT NULL,
+  `m_v_id` varchar(11) NOT NULL,
+  `m_start_date` date NOT NULL,
+  `m_end_date` varchar(100) DEFAULT NULL,
+  `m_service_info` varchar(256) NOT NULL,
+  `m_cost` varchar(11) NOT NULL DEFAULT '0',
+  `m_vendor` varchar(100) DEFAULT NULL,
+  `m_status` varchar(100) NOT NULL DEFAULT 'planned',
+  `m_created_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `vehicle_maintenance`
+  ADD PRIMARY KEY (`m_id`);
+ALTER TABLE `vehicle_maintenance`
+  MODIFY `m_id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `login_roles` ADD `lr_maintenace` INT(11) NOT NULL DEFAULT '0' AFTER `lr_ie_del`, ADD `lr_maintenace_add` INT(11) NOT NULL DEFAULT '0' AFTER `lr_maintenace`, ADD `lr_vech_availablity` INT(11) NOT NULL DEFAULT '0' AFTER `lr_maintenace_add`;
+ALTER TABLE `trips` CHANGE `t_trip_status` `t_trip_status` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'yettostart';
+ALTER TABLE `positions` ADD `traccar_pos_id` VARCHAR(100) NULL AFTER `created_date`;
+ALTER TABLE `positions` ADD `battery_level` VARCHAR(100) NULL AFTER `traccar_pos_id`;
+ALTER TABLE `positions` ADD `motion` VARCHAR(256) NULL AFTER `battery_level`, ADD `address` VARCHAR(256) NULL AFTER `motion`;
+ALTER TABLE `login_roles` ADD `lr_parts` INT(11) NOT NULL DEFAULT '1' AFTER `lr_vech_availablity`;
+CREATE TABLE `partsinventory` (
+  `p_id` int(11) NOT NULL,
+  `p_name` varchar(256) NOT NULL,
+  `p_desc` varchar(256) DEFAULT NULL,
+  `p_stock` int(100) NOT NULL DEFAULT 0,
+  `p_status` int(100) NOT NULL DEFAULT 1,
+  `p_created_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ALTER TABLE `partsinventory`
+  ADD PRIMARY KEY (`p_id`);
+ALTER TABLE `partsinventory`
+  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `vehicle_maintenance_parts_used` (
+  `pu_id` int(11) NOT NULL,
+  `pu_m_id` int(11) NOT NULL,
+  `pu_p_id` varchar(100) NOT NULL,
+  `pu_qty` varchar(100) NOT NULL,
+  `pu_created_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `vehicle_maintenance_parts_used`
+  ADD PRIMARY KEY (`pu_id`);
+
